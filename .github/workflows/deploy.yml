@@ -16,9 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject Secrets into HTML
+      - name: Generate config.js from Secrets
         run: |
-          sed -i 's/__AFFILIATE_ID__/${{ secrets.SHOPEE_AFF_ID }}/g' index.html
+          echo "const CONFIG = { AFFILIATE_ID: '${{ secrets.SHOPEE_AFF_ID }}' };" > config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
