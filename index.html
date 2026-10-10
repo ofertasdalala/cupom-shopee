@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Links de Desconto - Shopee</title>
+    <title>Gerador de Links e Busca - Shopee</title>
     <style>
         * {
             box-sizing: border-box;
@@ -52,9 +52,17 @@
         }
 
         .tab.active {
-            background-color: #ee4d2d; /* Cor da Shopee */
+            background-color: #ee4d2d;
             color: #fff;
             box-shadow: 0 4px 12px rgba(238, 77, 45, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .input-group {
@@ -139,19 +147,21 @@
             opacity: 0.9;
         }
 
-        /* Caixa de Resultado */
         #result-box {
             display: none;
-            margin-top: 15px;
+            margin-bottom: 20px;
             background: #2b2b2b;
-            padding: 12px;
+            padding: 14px;
             border-radius: 10px;
             word-break: break-all;
             font-size: 13px;
+            text-align: center;
         }
         
         #result-box a {
             color: #4da6ff;
+            text-decoration: underline;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -160,23 +170,32 @@
     <div class="container">
         <!-- Abas do Topo -->
         <div class="tabs">
-            <div class="tab active">🔗 Gerar Link</div>
-            <div class="tab" onclick="alert('Seção de pesquisa em breve!')">🔍 Pesquisar</div>
+            <div class="tab active" id="tab-link" onclick="switchTab('link')">🔗 Gerar Link</div>
+            <div class="tab" id="tab-search" onclick="switchTab('search')">🔍 Pesquisar</div>
         </div>
 
-        <!-- Campo de Input -->
-        <div class="input-group">
-            <span class="icon">📋</span>
-            <input type="text" id="product-link" placeholder="Cole aqui o link do produto da Shopee...">
+        <!-- Conteúdo da Aba 1: Gerar Link -->
+        <div id="content-link" class="tab-content active">
+            <div class="input-group">
+                <span class="icon">📋</span>
+                <input type="text" id="product-link" placeholder="Cole aqui o link do produto da Shopee...">
+            </div>
+            <button class="btn-generate" onclick="gerarLinkAfiliado()">GERAR LINK COM DESCONTO ⚡</button>
         </div>
 
-        <!-- Botão Principal -->
-        <button class="btn-generate" onclick="gerarLinkAfiliado()">GERAR LINK COM DESCONTO ⚡</button>
+        <!-- Conteúdo da Aba 2: Pesquisar -->
+        <div id="content-search" class="tab-content">
+            <div class="input-group">
+                <span class="icon">🔍</span>
+                <input type="text" id="search-keyword" placeholder="O que você procura na Shopee?">
+            </div>
+            <button class="btn-generate" onclick="pesquisarShopee()">BUSCAR NA SHOPEE 🛍️</button>
+        </div>
 
-        <!-- Área de Resultado (Opcional para exibir o link gerado ou redirecionar direto) -->
+        <!-- Caixa de Resultado -->
         <div id="result-box">
-            Link gerado com sucesso! <br>
-            <a id="final-link" href="#" target="_blank">Clique aqui se não abrir automaticamente</a>
+            <span>Link de Afiliado Gerado:</span><br><br>
+            <a id="final-link" href="#" target="_blank">Clique para abrir o produto</a>
         </div>
 
         <!-- Botões Sociais -->
@@ -184,13 +203,41 @@
             <a href="https://chat.whatsapp.com/KtUorhgfb9J1EwtOnIA530" target="_blank" class="btn-social btn-whatsapp">
                 💬 GRUPO NO WHATSAPP
             </a>
-            <a href="t.me/promos_da_lala" target="_blank" class="btn-social btn-telegram">
+            <a href="https://t.me/promos_da_lala" target="_blank" class="btn-social btn-telegram">
                 🤖 GRUPO NO TELEGRAM
             </a>
         </div>
     </div>
 
     <script>
+        // ID de Afiliado injetado ou configurado
+        const MY_AFFILIATE_ID = "__AFFILIATE_ID__"; 
+
+        function switchTab(type) {
+            document.getElementById('tab-link').classList.remove('active');
+            document.getElementById('tab-search').classList.remove('active');
+            document.getElementById('content-link').classList.remove('active');
+            document.getElementById('content-search').classList.remove('active');
+
+            if (type === 'link') {
+                document.getElementById('tab-link').classList.add('active');
+                document.getElementById('content-link').classList.add('active');
+            } else {
+                document.getElementById('tab-search').classList.add('active');
+                document.getElementById('content-search').classList.add('active');
+            }
+        }
+
+        function pesquisarShopee() {
+            const query = document.getElementById('search-keyword').value.trim();
+            if (!query) {
+                alert('Digite um termo para pesquisar.');
+                return;
+            }
+            const searchUrl = `https://shopee.com.br/search?keyword=${encodeURIComponent(query)}`;
+            window.open(searchUrl, '_blank');
+        }
+
         function gerarLinkAfiliado() {
             const inputUrl = document.getElementById('product-link').value.trim();
             
@@ -199,31 +246,17 @@
                 return;
             }
 
-            // Substitua abaixo com o seu modelo de link de afiliado da Shopee ou parâmetro UTM/Deeplink
-            // Exemplo genérico estruturado para programas de afiliados:
-            // Se você usa o link encurtado da Shopee ou parâmetros de subID, ajuste aqui.
-            
-            let linkAfiliado = inputUrl;
-            
-            // Exemplo simples adicionando parâmetros de rastreio de afiliado caso utilize links padrão:
-            // (Certifique-se de ajustar conforme a regra do seu painel de afiliado da Shopee)
-            try {
-                const urlObj = new URL(inputUrl);
-                // Exemplo de inclusão de parâmetros de afiliado se necessário:
-                // urlObj.searchParams.set('smtt', 'seu_codigo_aqui');
-                // linkAfiliado = urlObj.toString();
-                
-                // Se preferir redirecionar direto:
-                window.open(linkAfiliado, '_blank');
-                
-                // Ou mostrar na caixa de resultado:
-                document.getElementById('final-link').href = linkAfiliado;
-                document.getElementById('final-link').innerText = linkAfiliado;
-                document.getElementById('result-box').style.display = 'block';
+            const encodedUrl = encodeURIComponent(inputUrl);
+            const trackingLink = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${MY_AFFILIATE_ID}`;
 
-            } catch (e) {
-                alert('Link inválido. Verifique o endereço inserido.');
-            }
+            const resultBox = document.getElementById('result-box');
+            const finalLinkAnchor = document.getElementById('final-link');
+
+            finalLinkAnchor.href = trackingLink;
+            finalLinkAnchor.innerText = trackingLink;
+            resultBox.style.display = 'block';
+
+            window.open(trackingLink, '_blank');
         }
     </script>
 
