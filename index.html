@@ -240,13 +240,43 @@
             window.open(searchUrl, '_blank');
         }
 
-        function gerarLinkAfiliado() {
-            const inputUrl = document.getElementById('product-link').value.trim();
-            
-            if (!inputUrl) {
-                alert('Por favor, cole o link do produto da Shopee.');
-                return;
-            }
+        let linkAfiliadoFinal = "";
+
+    function gerarLinkAfiliado() {
+        const inputUrl = document.getElementById('product-link').value.trim();
+        
+        if (!inputUrl) {
+            alert('Por favor, cole o link do produto da Shopee.');
+            return;
+        }
+
+        // Pega o ID de afiliado do config.js ou fallback
+        const affiliateId = (typeof CONFIG !== 'undefined') ? CONFIG.AFFILIATE_ID : MY_AFFILIATE_ID;
+
+        if (!affiliateId || affiliateId === "__AFFILIATE_ID__") {
+            alert('Atenção: Configure o seu ID de afiliado antes de gerar os links.');
+            return;
+        }
+
+        const encodedUrl = encodeURIComponent(inputUrl);
+        linkAfiliadoFinal = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${affiliateId}`;
+
+        // Exibe a caixa de resultado limpa com o botão de copiar
+        document.getElementById('result-box').style.display = 'block';
+
+        // Abre automaticamente em nova aba
+        window.open(linkAfiliadoFinal, '_blank');
+    }
+
+    function copiarLinkGerado() {
+        if (!linkAfiliadoFinal) return;
+        
+        navigator.clipboard.writeText(linkAfiliadoFinal).then(() => {
+            alert('Link copiado para a área de transferência!');
+        }).catch(err => {
+            console.error('Erro ao copiar: ', err);
+        });
+    }
 
             const encodedUrl = encodeURIComponent(inputUrl);
             const trackingLink = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${MY_AFFILIATE_ID}`;
