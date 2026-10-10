@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Links e Busca - Shopee</title>
+    <!-- Carrega o arquivo de configuração gerado automaticamente pelo GitHub Actions -->
+    <script src="config.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -202,11 +204,8 @@
             </a>
         </div>
     </div>
-
+    
     <script>
-        // ID de Afiliado (Se usar o GitHub Actions, o texto __AFFILIATE_ID__ será substituído automaticamente pelo seu Secret)
-        const MY_AFFILIATE_ID = "__AFFILIATE_ID__"; 
-
         function switchTab(type) {
             document.getElementById('tab-link').classList.remove('active');
             document.getElementById('tab-search').classList.remove('active');
@@ -242,13 +241,16 @@
                 return;
             }
 
-            if (!MY_AFFILIATE_ID || MY_AFFILIATE_ID === "__AFFILIATE_ID__") {
+            // Puxa o ID do arquivo config.js criado dinamicamente pelo GitHub Actions
+            const affiliateId = (typeof CONFIG !== 'undefined') ? CONFIG.AFFILIATE_ID : "";
+
+            if (!affiliateId) {
                 alert('Atenção: O ID de afiliado não foi configurado corretamente.');
                 return;
             }
 
             const encodedUrl = encodeURIComponent(inputUrl);
-            linkAfiliadoFinal = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${MY_AFFILIATE_ID}`;
+            linkAfiliadoFinal = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${affiliateId}`;
 
             document.getElementById('result-box').style.display = 'block';
             window.open(linkAfiliadoFinal, '_blank');
