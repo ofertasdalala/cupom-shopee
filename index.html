@@ -203,11 +203,8 @@
         </div>
     </div>
 
-    <!-- Se estiver testando localmente com o config.js, descomente a linha abaixo: -->
-    <!-- <script src="config.js"></script> -->
-
     <script>
-        // ID de Afiliado (caso não use o arquivo config.js externo, defina seu ID aqui)
+        // ID de Afiliado (Se usar o GitHub Actions, o texto __AFFILIATE_ID__ será substituído automaticamente pelo seu Secret)
         const MY_AFFILIATE_ID = "__AFFILIATE_ID__"; 
 
         function switchTab(type) {
@@ -245,21 +242,15 @@
                 return;
             }
 
-            // Pega o ID de afiliado do config.js ou do fallback local
-            const affiliateId = (typeof CONFIG !== 'undefined') ? CONFIG.AFFILIATE_ID : MY_AFFILIATE_ID;
-
-            if (!affiliateId || affiliateId === "__AFFILIATE_ID__") {
-                alert('Atenção: Configure o seu ID de afiliado antes de gerar os links.');
+            if (!MY_AFFILIATE_ID || MY_AFFILIATE_ID === "__AFFILIATE_ID__") {
+                alert('Atenção: O ID de afiliado não foi configurado corretamente.');
                 return;
             }
 
             const encodedUrl = encodeURIComponent(inputUrl);
-            linkAfiliadoFinal = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${affiliateId}`;
+            linkAfiliadoFinal = `https://s.shopee.com.br/an_redir?origin_link=${encodedUrl}&affiliate_id=${MY_AFFILIATE_ID}`;
 
-            // Exibe a caixa de resultado limpa com o botão de copiar
             document.getElementById('result-box').style.display = 'block';
-
-            // Abre automaticamente em nova aba
             window.open(linkAfiliadoFinal, '_blank');
         }
 
